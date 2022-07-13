@@ -1,0 +1,161 @@
+@charset "UTF-8";
+
+* {
+	font-family: 'Heebo', sans-serif;
+	color: white;
+	font-size:24px;
+	text-align: center;
+	padding: 5px 5px 0px 5px;
+}
+
+div {
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	background-color: #0e5eb4;
+	border: 2px solid #000;
+	margin: auto;
+	position: fixed;
+}
+
+#roscoAll {
+	border: 0px solid #000;
+	border-radius: 0;
+	background-color: white;
+}
+
+
+#containter {
+	position: fixed; 
+	top: 170px; 
+	left: 175px;
+	border-radius: 10px;
+	border: 2px solid black;
+	width: 300px;
+	height: 300px;
+	/*text-align: center;*/
+	
+}
+
+#ask {
+	position: relative;
+}
+
+
+input {
+	color: black;
+}
+
+input[type=button]{
+	border-radius: 10%;
+	background-color:aliceblue;
+	border-color: #000;
+	color: #000;
+	font-weight: bold;
+}
+input[type=button]:hover{
+	background-color:red;
+	border-color: white;
+	color: white ;
+
+}
+
+label {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 270px;
+}
+
+#title, #correcto, #incorrecto {
+	position: absolute;
+	top: 50px;
+	font-size: 40px;
+	font-weight: bold;
+}
+
+#goStar {
+	position: absolute;
+	bottom: 30px;
+	left: 40%;
+	width: auto;
+}
+
+#nameAnswer {
+	position: absolute;
+	top: 150px;
+	left: 50px;
+	width: 200px;
+}
+
+#nameOk, #rankingOk{
+	position: absolute;
+	bottom: 20px;
+	left: 43%; 
+	width: auto;
+}
+
+#rankingOk{
+	left: 35%; 
+}
+
+#answer {
+	position: absolute;
+	bottom: 30px;
+	left: 20px;
+	width: 200px;
+}
+
+#okAnswer {
+	position: absolute;
+	bottom: 30px;
+	right: 20px;
+	width: auto;
+}
+
+#question {
+	font-size:20px;
+}
+
+#finish, #recuerda{
+	position: none;
+}
+
+#instrucciones {
+	position: none;
+	top:50px;
+	left: 20px;
+}
+
+#byby {
+	position: none;
+	top:60%;
+	left: 20px;
+}
+
+#answerCorrect {
+	position: none;
+	top:110px;
+	left: 20px;
+}
+
+#answerCorrectUp {
+	position: none;
+	top: 155px;px;
+	left: 20px;
+	font-size: 32px;
+	font-weight: bold;
+}
+
+p {
+	margin: 0px;
+	font-size: 20px;
+}
+
+#crono{
+
+	position: fixed;
+	top: 550px;
+	left: 50px;
+
+}
