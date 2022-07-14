@@ -1,3 +1,5 @@
+/// / Master Variables ///
+
 const questions = [
   {
     letter: "a",
@@ -601,11 +603,12 @@ const playRosco = [
   "z",
 ];
 
+let playLetter = 0;
+
 let questionsPlay = [];
 
 const ranking = [
   { name: "Paul", rights: 10, wrong: 2 },
-  { name: "Anna", rights: 25, wrong: 2 },
   { name: "Margaret", rights: 21, wrong: 2 },
   { name: "John", rights: 17, wrong: 4 },
   { name: "Scarlett", rights: 21, wrong: 6 },
@@ -617,13 +620,214 @@ const newPlayer = {
   wrong: 0,
 };
 
+let secons = 300;
+let crono; // setInterval();
+
+/// / sequens play ///
+
+const goStar = () => {
+  askPlayerName();
+  questionsPlay = filterQuestionsPlay();
+};
+
 const askPlayerName = () => {
-  const playerName = prompt("Vamos a conocer el concursante de hoy:");
+  const container = document.getElementById("containter");
+
+  container.innerHTML =
+    '<label id="nameAsk">Vamos a conocer el concursante de hoy:</label>';
+  container.innerHTML +=
+    '<input type="text" id="nameAnswer" value="Sin nombre">';
+  container.innerHTML +=
+    '<input type="button" id="nameOk" value="OK" onclick="answerName()" >';
+
+  document.getElementById("nameAnswer").select();
+
+  document.getElementById("nameAnswer").onkeydown = (event) => {
+    if (event.key == "Enter") {
+      answerName();
+    }
+  };
+
+  // window.addEventListener("keydown", function(event) {if(event.key == 'Enter' ){answerName()}}, true);
+};
+
+const answerName = () => {
+  playerName = document.getElementById("nameAnswer").value;
+
   if (!playerName) {
     return askPlayerName();
   }
 
-  return firstChartToUpperCase(playerName);
+  newPlayer.name = firstChartToUpperCase(playerName);
+
+  showInstruccions();
+};
+
+const showInstruccions = () => {
+  const container = document.getElementById("containter");
+
+  container.innerHTML = '<label id="recuerda"> Recuerda: </label><br>';
+  container.innerHTML +=
+    '<label id="instrucciones"> Pasapalabra saltara la letra para la siguiente ronda y si quieres finalizar el juego escribe END. Preparado !!</label>';
+  container.innerHTML +=
+    '<input type="button" id="nameOk" value="GO" onclick="newRound()" >';
+};
+
+const newRound = (cronoRun) => {
+  if (!cronoRun) {
+    cronoState(true);
+  }
+
+  if (newPlayer.rights + newPlayer.wrong < questionsPlay.length) {
+    const letter = questionsPlay
+      .filter((question) => question.letter === playRosco[playLetter])
+      .pop();
+
+    if (!letter.status) {
+      questionShow(letter);
+    } else {
+      newPlayLetter();
+      newRound(true);
+    }
+  } else {
+    byebye(true);
+  }
+};
+
+const questionShow = (letter) => {
+  console.log(letter.answer);
+
+  const container = document.getElementById("containter");
+
+  container.innerHTML = `<label id="question">${letter.question}</label>`;
+  container.innerHTML += '<input type="text" id="answer" value="Pasapalabra">';
+  container.innerHTML +=
+    '<input type="button" id="okAnswer" value="OK" onclick="answerOk()" >';
+
+  document.getElementById("answer").select();
+
+  document.getElementById("answer").onkeyup = (event) => {
+    if (event.key == "Enter") {
+      answerOk();
+    }
+  };
+};
+
+const answerOk = () => {
+  // console.log (playRosco[playLetter]);
+
+  const answer = document.getElementById("answer").value.toLowerCase();
+
+  switch (answer) {
+    case "end":
+      byebye(false);
+      break;
+    case questionsPlay[playLetter].answer:
+      questionsPlay[playLetter].status = 1;
+      newPlayer.rights++;
+      document.getElementById(playRosco[playLetter]).style.backgroundColor =
+        "green";
+      isCorrectShow(true);
+      newPlayLetter();
+      break;
+    case "pasapalabra":
+      newPlayLetter();
+      newRound(true);
+      break;
+    default:
+      questionsPlay[playLetter].status = 2;
+      newPlayer.wrong++;
+      document.getElementById(playRosco[playLetter]).style.backgroundColor =
+        "red";
+      isCorrectShow(false);
+      newPlayLetter();
+  }
+
+  // console.log(questionsPlay)
+};
+
+const isCorrectShow = (is) => {
+  const container = document.getElementById("containter");
+
+  cronoState(false);
+
+  if (is) {
+    container.innerHTML = '<label id="correcto">Correcto !!</label>';
+  } else {
+    container.innerHTML = '<label id="incorrecto">Incorrecto !!</label>';
+    container.innerHTML += `<label id="answerCorrect"> la palabra correcta era:</label>`;
+    container.innerHTML += `<label id="answerCorrectUp">${firstChartToUpperCase(
+      questionsPlay[playLetter].answer
+    )}</label>`;
+  }
+
+  container.innerHTML += `<input type="button" id="nameOk" value="GO" onclick="newRound()" >`;
+};
+
+const newPlayLetter = () => {
+  playLetter + 1 < playRosco.length ? playLetter++ : (playLetter = 0);
+};
+
+const byebye = (finished) => {
+  cronoState(false);
+
+  if (secons === 0) {
+    document.getElementById("crono").style.backgroundColor = "red";
+  }
+
+  const container = document.getElementById("containter");
+
+  container.innerHTML = `<label id="finish">${newPlayer.name} <br> has acertado ${newPlayer.rights} letras <br> y has fallado ${newPlayer.wrong} letras </label>`;
+
+  if (finished) {
+    container.innerHTML +=
+      '<input type="button" id="rankingOk" value="Ranking" onclick="showRanking()" >';
+  } else {
+    container.innerHTML += `<label id="byby">Bye Baye !! <br> Hasta pronto, ${newPlayer.name}. </label>`;
+  }
+};
+
+const showRanking = () => {
+  ranking.push(newPlayer);
+
+  const container = document.getElementById("containter");
+
+  container.innerHTML = `<label id="ranking"><strng>Ranking:</strong></label><br><br>`;
+
+  ranking.sort((a, b) => b.rights - a.rights);
+
+  // container.innerHTML += `<ol>`
+  ranking.forEach(
+    (player, index) =>
+      (container.innerHTML += `<p>${index + 1}º ${player.name} con ${
+        player.rights
+      } aciertos</p>`)
+  );
+  // container.innerHTML += `</ol>`
+};
+
+/// / utilitis ///
+
+const makeRoscoHTML = () => {
+  const centerX = 300;
+  const centerY = 300;
+
+  let angle = Math.PI;
+  const alingSteps = (2 * Math.PI) / playRosco.length;
+  const radius = 250;
+
+  playRosco.forEach((letter) => {
+    const posX = Math.round(centerX + radius * Math.cos(angle));
+    const posY = Math.round(centerY + radius * Math.sin(angle));
+
+    document.getElementById(
+      "roscoAll"
+    ).innerHTML += `<div id="${letter}">${letter.toUpperCase()}</div>`;
+    document.getElementById(letter).style.top = `${Math.round(posX)}px`;
+    document.getElementById(letter).style.left = `${Math.round(posY)}px`;
+
+    angle -= alingSteps;
+  });
 };
 
 const newNumberRandom = (n) => Math.floor(Math.random() * n);
@@ -646,80 +850,15 @@ const filterQuestionsPlay = () => {
   return selectQuestionsPlay;
 };
 
-const answerShow = (letter) => {
-  let answerPleyer = prompt(`${newPlayer.name} dime ${letter.question}`);
-  answerPleyer ? answerPleyer.toLowerCase : (answerPleyer = "pasapalabra");
-  return answerPleyer;
+const cronoState = (state) => {
+  state ? (crono = setInterval(displaySecons, 1000)) : clearInterval(crono);
 };
 
-const round = () => {
-  let exitFor = false;
+const displaySecons = () => {
+  document.getElementById("crono").innerHTML = secons;
 
-  questionsPlay.every((letter) => {
-    if (!letter.status) {
-      switch (answerShow(letter)) {
-        case "end":
-          exitFor = true;
-          return false;
-        case letter.answer:
-          letter.status = 1;
-          newPlayer.rights++;
-          alert(`Correcto. Muy bine ${newPlayer.name} !! Seguimos.`);
-          break;
-        case "pasapalabra":
-          break;
-        default:
-          letter.status = 2;
-          newPlayer.wrong++;
-          alert(
-            `Incorrecto. ${
-              newPlayer.name
-            } la palabra correcta era: ${letter.answer.toUpperCase()}. Seguimos.`
-          );
-      }
-    }
-
-    return true;
-  });
-
-  exitFor ? byebye(false) : newRound();
-};
-
-const newRound = () => {
-  newPlayer.rights + newPlayer.wrong < questionsPlay.length
-    ? round()
-    : byebye(true);
-};
-
-const byebye = (finished) => {
-  console.log(
-    `${newPlayer.name} has acertado ${newPlayer.rights} lletres y has fallado ${newPlayer.wrong}`
-  );
-
-  finished
-    ? showRanking()
-    : console.log(`Bye Baye ${newPlayer.name} hasta pronto`);
-};
-
-const showRanking = () => {
-  ranking.push(newPlayer);
-
-  console.log("La clasificación queda de la siguiente manera :");
-
-  ranking.sort((a, b) => b.rights - a.rights);
-
-  ranking.forEach((player, index) =>
-    console.log(`${index + 1}º: ${player.name} con ${player.rights} aciertos`)
-  );
+  secons === 0 ? byebye(false) : secons--;
 };
 
 const firstChartToUpperCase = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-
-const goPlay = () => {
-  newPlayer.name = askPlayerName();
-  questionsPlay = filterQuestionsPlay();
-  round();
-};
-
-goPlay();

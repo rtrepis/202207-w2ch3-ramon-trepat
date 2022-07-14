@@ -29,11 +29,19 @@ let lastFlightsTxt = "";
 
 console.log("Benvingut " + userName);
 
-function askName() {
+/*   I Start refactor this funcion
+function askName(newName) {
   let newName = prompt("Introdueix el seu nom");
   newName ? (newName = newName.trim()) : (newName = "NoName");
   return newName;
 }
+*/
+
+const askName = function (newName) {
+  let newName = prompt("Introdueix el seu nom");
+  newName ? (newName = newName.trim()) : (newName = "NoName");
+  return newName;
+};
 
 flights.forEach((flights) => {
   let scaleTxt;
