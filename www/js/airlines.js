@@ -1,4 +1,4 @@
-let flights = [
+const flights = [
   { id: 0, to: "Bilbao", from: "Barcelona", cost: 1600, scale: false },
 
   { id: 1, to: "New York", from: "Barcelona", cost: 700, scale: false },
@@ -27,7 +27,7 @@ let allCost = 0;
 let allScale = 0;
 let lastFlightsTxt = "";
 
-console.log("Benvingut " + newUser);
+console.log(`Benvingut ${newUser}`);
 
 flights.forEach((flights) => {
   let scaleTxt;
@@ -39,19 +39,18 @@ flights.forEach((flights) => {
     scaleTxt = " sense escales";
   }
   console.log(
-    `El vol amb origen ${flights.from}, i destí ${flights.to} te un cost de ${flights.cost}€` +
-      scaleTxt
+    `El vol amb origen ${flights.from}, i destí ${flights.to} te un cost de ${flights.cost}€${scaleTxt}`
   );
 
   allCost += flights.cost;
 });
 
-//flights.slice(-5).forEach(flights => {lastFlightsTxt += flights.to + ', '});
+// flights.slice(-5).forEach(flights => {lastFlightsTxt += flights.to + ', '});
 // al forEach com li dic que l'últim parametre em posi un punt?¿
 
 for (i = 0; i < flights.slice(-5).length; i++) {
   if (i < flights.slice(-5).length - 1) {
-    lastFlightsTxt += flights[i].to + ", ";
+    lastFlightsTxt += `${flights[i].to}, `;
   } else {
     lastFlightsTxt += flights[i].to;
   }
